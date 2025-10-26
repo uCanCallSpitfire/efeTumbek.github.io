@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Efe Tumbek — Portfolyo</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p8f6Yk6Y3oXw2b3Q9Kq7XvF5Gg2KcVv7eV6Qb1h2Jq2zIuK5Y2Yq2zJ3K1Vq1Yx7+7FJw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        /* Reset & genel */
+        *, *::before, *::after { box-sizing: border-box; }
+        :root {
+            --dark-blue-bg: #0A192F;
+            --light-slate: #CCD6F6;
+            --slate: #8892B0;
+            --green-accent: #64FFDA;
+            --font-sans: 'Calibre', 'Inter', 'San Francisco', 'SF Pro Text', -apple-system, system-ui, sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--dark-blue-bg);
+            color: var(--light-slate);
+            font-family: var(--font-sans);
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+            overflow-x: hidden;
+            cursor: none; /* default cursor gizlendi */
+        }
+
+        /* Mouse glow efekti için */
+        .custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            background-color: #64FFDA;
+            border-radius: 50%;
+            pointer-events: none;
+            /* Daha geniş ve yumuşak glow */
+            box-shadow: 0 0 20px 10px rgba(100,255,218,0.3), 
+                        0 0 40px 20px rgba(100,255,218,0.2), 
+                        0 0 60px 30px rgba(100,255,218,0.1);
+            transition: transform 0.1s ease-out, box-shadow 0.2s ease-out;
+            z-index: 9999;
+        }
+
+        .custom-cursor.hover {
+            transform: scale(1.5);
+            box-shadow: 0 0 30px 15px rgba(100,255,218,0.5),
+                        0 0 60px 30px rgba(100,255,218,0.3),
+                        0 0 90px 45px rgba(100,255,218,0.2);
+        }
+
+        /* Container */
+        #portfolio-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 50px;
+            gap: 40px;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        #sidebar {
+            width: 40%;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        .header-content h1 {
+            font-size: 48px;
+            margin: 0 0 5px 0;
+            color: var(--light-slate);
+        }
+
+        .header-content h2 {
+            font-size: 20px;
+            color: var(--slate);
+            margin: 0 0 18px 0;
+            font-weight: 400;
+        }
+
+        .header-content p {
+            color: var(--slate);
+            max-width: 420px;
+            margin: 0;
+        }
+
+        /* Nav */
+        nav { margin-top: 30px; }
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-list li { margin-bottom: 15px; }
+
+        .nav-list a {
+            text-decoration: none;
+            color: var(--slate);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            transition: color 0.25s;
+            display: inline-block;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .nav-list a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 5px;
+            height: 6px;
+            background-color: var(--slate);
+            transition: width 0.25s, background-color 0.25s;
+            border-radius: 2px;
+        }
+
+        .nav-list a:hover,
+        .nav-list a.active {
+            color: var(--green-accent);
+        }
+
+        .nav-list a:hover::before,
+        .nav-list a.active::before {
+            width: 15px;
+            background-color: var(--green-accent);
+        }
+
+        .social-links {
+            margin-top: 30px;
+        }
+
+        .social-links a {
+            color: var(--light-slate);
+            font-size: 20px;
+            margin-right: 18px;
+            transition: color 0.25s;
+            text-decoration: none; /* Metin eklendiğinde alt çizgiyi önler */
+        }
+
+        .social-links a:hover { color: var(--green-accent); }
+
+        /* Metin olarak eklenen linklerin mobil görünümde ayarları */
+        .social-links .link-text {
+            display: none; /* Varsayılan olarak metni gizle */
+        }
+
+        /* Content area */
+        #content-area {
+            width: 60%;
+            padding-left: 0;
+            padding-top: 50px;
+            padding-bottom: 200px;
+        }
+
+        /* Tüm ana bölümlere section-block sınıfını uyguluyoruz */
+        .section-block {
+            margin-bottom: 100px;
+        }
+        
+        /* Deneyim Bölümü Stilleri */
+        #content-area h2 {
+            font-size: 32px;
+            color: var(--light-slate);
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(136, 146, 176, 0.2); /* Hafif ayırıcı */
+            padding-bottom: 10px;
+        }
+
+        .experience-item {
+            margin-bottom: 30px;
+            padding: 15px;
+            border-left: 2px solid var(--green-accent);
+            background-color: rgba(10, 25, 47, 0.4); /* Hafif arka plan */
+            border-radius: 4px;
+        }
+        
+        .experience-item h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+            color: var(--green-accent);
+        }
+        
+        .experience-item .exp-date {
+            display: block;
+            font-size: 12px;
+            color: var(--slate);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .experience-item p {
+            font-size: 14px;
+            margin: 0;
+            color: var(--slate);
+        }
+
+
+        /* Project card */
+        .project-card {
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            padding: 14px;
+            border-radius: 8px;
+            transition: background-color 0.25s, box-shadow 0.25s, transform 0.15s;
+        }
+
+        .project-card:hover {
+            background-color: rgba(30,45,65,0.5);
+            transform: translateY(-4px);
+            cursor: pointer;
+        }
+
+        .project-image img {
+            width: 110px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 6px;
+            display: block;
+        }
+
+        .project-details h3 {
+            margin: 0 0 6px 0;
+            font-size: 18px;
+            color: var(--light-slate);
+        }
+
+        .project-details p {
+            margin: 0 0 10px 0;
+            color: var(--slate);
+            font-size: 14px;
+        }
+
+        .tech-tags span {
+            display: inline-block;
+            background-color: rgba(100,255,218,0.07);
+            color: var(--green-accent);
+            padding: 5px 10px;
+            margin-right: 8px;
+            border-radius: 999px;
+            font-size: 12px;
+        }
+
+        .stats {
+            color: var(--slate);
+            font-size: 13px;
+            margin-top: 8px;
+        }
+        
+        /* Yeni İletişim Bölümü Stilleri */
+        /* Bu bölüm için 'section-block' sınıfını ekledik */
+        #contact {
+             /* Düzgün çalışması için margin-bottom'ı biraz azaltabiliriz, ama scrollspy'a engel olmamalı */
+             margin-bottom: 100px;
+        }
+
+        .contact-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            background-color: rgba(10, 25, 47, 0.6); /* Hafif arka plan */
+            border-radius: 8px;
+            border: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        .contact-content h3 {
+            font-size: 28px;
+            color: var(--light-slate);
+            margin: 0 0 10px 0;
+        }
+
+        .contact-content p {
+            color: var(--slate);
+            max-width: 500px;
+            margin-bottom: 25px;
+        }
+
+        .contact-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .contact-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            border: 1px solid var(--green-accent);
+            border-radius: 4px;
+            color: var(--green-accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.25s;
+        }
+
+        .contact-button:hover {
+            background-color: rgba(100,255,218,0.1);
+            color: var(--light-slate); /* Hover'da metin rengini açar */
+            transform: translateY(-2px);
+        }
+
+        .contact-button i {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1080px) {
+            #portfolio-container {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            #sidebar {
+                position: relative; /* Sticky kaldırıldı */
+                width: 100%;
+                height: auto;
+                padding-bottom: 20px;
+                justify-content: flex-start;
+            }
+            
+            /* Mobil görünümde navigasyon ve sosyal linkleri yatay yerleştir */
+            #sidebar > div:first-child { /* Header Content + Nav */
+                display: flex;
+                flex-direction: column;
+            }
+            
+            nav { margin-top: 15px; } /* Mobil nav üst boşluğunu azalt */
+            .nav-list { display: flex; flex-wrap: wrap; gap: 10px; } /* Nav'ı yatay yap */
+            .nav-list li { margin-bottom: 0; }
+            .nav-list a { padding-left: 0; }
+            .nav-list a::before { display: none; } /* Mobil nav ikonlarını kaldır */
+
+            .social-links {
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid rgba(136, 146, 176, 0.2);
+            }
+            
+            /* Sosyal linkleri ikon ve metin olarak göster */
+            .social-links a {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                margin-right: 20px;
+                font-size: 20px; /* İkon boyutu */
+            }
+
+            .social-links .link-text {
+                display: inline;
+                font-size: 14px;
+                color: var(--light-slate);
+            }
+            
+            .contact-buttons {
+                flex-direction: column;
+            }
+
+            #content-area { width: 100%; padding-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="custom-cursor"></div>
+
+<main id="portfolio-container">
+
+    <header id="sidebar" role="banner">
+        <div>
+            <div class="header-content">
+                <h1>Efe Tumbek</h1>
+                <h2>Full-Stack, Cybersecurity, AI Developer & Student</h2>
+                <p>I'm constantly working within data and imagination to shape the future with code.</p>
+
+            </div>
+
+            <nav aria-label="Ana navigasyon">
+                <ul class="nav-list">
+                    <li><a href="#about">ABOUT</a></li>
+                    <li><a href="#experience">EXPERIENCE</a></li>
+                    <li><a href="#projects">PROJECTS</a></li>
+                    <li><a href="#contact">CONTACT</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="social-links">
+            <a href="https://github.com/mehmetefe" target="_blank" aria-label="GitHub">
+                <i class="fab fa-github"></i>
+                <span class="link-text">GitHub</span>
+            </a>
+            <a href="https://linkedin.com/in/mehmetefe" target="_blank" aria-label="LinkedIn">
+                <i class="fab fa-linkedin-in"></i>
+                <span class="link-text">LinkedIn</span>
+            </a>
+            <a href="https://instagram.com/mehmetefe" target="_blank" aria-label="Instagram">
+                <i class="fab fa-instagram"></i>
+                <span class="link-text">Instagram</span>
+            </a>
+        </div>
+    </header>
+
+    <div id="content-area">
+        <section id="about" class="section-block" aria-labelledby="about-title">
+            <h2 id="about-title">ABOUT</h2>
+            <p>
+                I'm <strong>Efe</strong> — a developer and cybersecurity enthusiast thriving at the crossroads of
+                <em>creativity, logic, and curiosity.</em><br><br>
+
+                I build systems that make technology feel alive — from sleek, accessible web interfaces
+                to intelligent embedded devices that push the boundaries of what’s possible.<br><br>
+
+                My journey began with a few lines of code and grew into a deeper exploration of how machines think,
+                how data flows, and how digital systems can both protect and expose the world we live in.<br><br>
+
+                Whether I’m crafting front-end experiences or engineering low-level systems,
+                my mission remains the same:
+                <strong>to transform complex technology into elegant, powerful, and meaningful experiences.</strong><br><br>
+
+                I’m constantly experimenting with new ideas — blending design, AI, and hardware
+                to create smarter and more secure digital environments.
+                To me, great code isn’t just syntax — it’s an art form, a language of creation.<br><br>
+
+                When I’m not coding, you’ll probably find me testing new hardware,
+                automating the impossible, or simply reimagining what technology could become next.<br><br>
+
+                ⚙️ <strong>Always learning. Always building. Never static.</strong>
+                </p>
+
+        </section>
+
+        <section id="experience" class="section-block" aria-labelledby="exp-title">
+            <h2 id="exp-title">EXPERIENCE</h2>
+
+            <div class="experience-item">
+                <h3>First Lego League, TÜBİTAK 3007 & School Software Clubs</h3>
+                <span class="exp-date">2016 - 2019</span>
+                <p>Participated in robotics and software development competitions, including First Lego League and TÜBİTAK 3007.
+                Collaborated in school-based software and robotics groups to develop innovative projects and prototype systems.
+                Gained early experience in teamwork, problem-solving, and integrating software with hardware.</p>
+            </div>
+
+            <div class="experience-item">
+                <h3>Deneyap Schools — Türkiye Teknoloji Kurumu (Scholarship Program)</h3>
+                <span class="exp-date">2022 – 2023</span>
+                <p>Attended Deneyap Schools under the Türkiye Teknoloji Kurumu scholarship program.
+                Received advanced training in software development, embedded systems, and robotics.
+                Worked on hands-on projects integrating coding, hardware, and IoT applications.</p>
+            </div>
+
+            <div class="experience-item">
+                <h3>Hardware Modding & Repair — Hobby Projects</h3>
+                <span class="exp-date">2022 – Present</span>
+                <p>Repair and customize retro consoles, mechanical keyboards, and custom PCBs.
+                Use 3D printing, soldering, and circuit-level diagnostics to restore and improve electronic devices.
+                Blend creativity and engineering to build unique, functional prototypes.</p>
+            </div>
+
+            <div class="experience-item">
+                <h3>Embedded Systems Developer — Personal Projects</h3>
+                <span class="exp-date">2023 – Present</span>
+                <p>Designed interactive systems and smart devices using ESP32, Raspberry Pi, and Flipper Zero.
+                Built LED matrix animations, motor control systems, and hardware interfaces with C++, CircuitPython, and MicroPython.
+                Frequently explores AI and network integration for automation and security purposes.
+                Completed several online hardware and firmware development trainings.</p>
+            </div>
+
+            <div class="experience-item">
+                <h3>Cybersecurity & Ethical Hacking — Independent Researcher</h3>
+                <span class="exp-date">2023 – Present</span>
+                <p>Focused on network and wireless security through ethical hacking practices.
+                Developed Python-based tools for monitoring, automation, and local network defense.
+                Experimented with SDR, ESP32, and Raspberry Pi devices for controlled penetration testing and data analysis.
+                Actively participates in online cybersecurity challenges and training sessions to sharpen real-world skills.</p>
+            </div>
+
+            <div class="experience-item">
+                <h3>Back-End Developer — Personal & Freelance Projects</h3>
+                <span class="exp-date">2025 – Present</span>
+                <p>Designed and developed server-side applications and APIs for personal projects using Python, Flask, and Node.js.
+                Implemented database solutions (SQLite, PostgreSQL) and optimized data flows for performance and security.
+                Integrated backend systems with embedded devices for automation and IoT projects.
+                Continuously learning advanced backend patterns and security practices.</p>
+            </div>
+
+            <div class="experience-item">
+                <h3>Front-End Developer — Portfolio & UI Projects</h3>
+                <span class="exp-date">2025 – Present</span>
+                <p>Created modern, responsive websites using HTML, CSS, and JavaScript with a cyber-themed visual identity.
+                Focused on accessibility, smooth animations, and performance optimization.
+                Enhanced design and UX skills through online courses and practical UI/UX workshops.</p>
+            </div>
+        </section>
+
+        <section id="projects" class="section-block" aria-labelledby="proj-title">
+            <h2 id="proj-title">PROJECTS</h2>
+
+
+            <article class="project-card" tabindex="0" role="article" aria-label="AI-Powered Task Manager">
+                <div class="project-image">
+                    <img src="https://icon-library.com/icon/terminal-icon-png-0.html" alt="AI Task Manager screenshot">
+                </div>
+                <div class="project-details">
+                    <h3>Privy.AI</h3>
+                    <p>Privy.AI is a fully local, private, personal AI assistant that learns and remembers your preferences, habits, and details. It interacts via text or voice, provides real-time weather and time updates using local tool-calling, and adapts its responses to your personality—all while keeping all data securely on your device.
+                      </p>
+                    <div class="tech-tags">
+                        <span>Python</span><span>AI</span><span>ollama</span><span>Assistance</span>
+                    </div>
+                    <div class="stats">2025 · AI Project</div>
+                </div>
+            </article>
+
+            <article class="project-card" tabindex="0" role="article" aria-label="AI-Powered Task Manager">
+                <div class="project-image">
+                    <img src="https://github.com/user-attachments/assets/568c2396-f532-4f9d-8d48-2aad2fb9276c" alt="AI Task Manager screenshot">
+                </div>
+                <div class="project-details">
+                    <h3>CyberVision Glasses</h3>
+                    <p>CyberVision Glasses is a Wi-Fi–controlled LED matrix eyewear powered by an ESP32.
+It creates mesmerizing animations like blinking eyes, fire, hearts, and sound waves on 8×8 LED matrix panels.
+Control everything straight from your phone’s browser — no apps, no internet, just pure style.</p>
+                    <div class="tech-tags">
+                        <span>C++</span><span>Esp32</span><span>Soldering</span><span>Robotic</span>
+                    </div>
+                    <div class="stats">2023 · Hobby Project</div>
+                </div>
+            </article>
+
+            <article class="project-card" tabindex="0" role="article" aria-label="Wireless Security Analyzer">
+                <div class="project-image">
+                    <img src="https://private-user-images.githubusercontent.com/175241145/504267741-9fded301-aa67-4998-9f92-c441a640fd81.jpeg?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjExNTkwMjcsIm5iZiI6MTc2MTE1ODcyNywicGF0aCI6Ii8xNzUyNDExNDUvNTA0MjY3NzQxLTlmZGVkMzAxLWFhNjctNDk5OC05ZjkyLWM0NDFhNjQwZmQ4MS5qcGVnP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI1MTAyMiUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNTEwMjJUMTg0NTI3WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9MDAzMmMwZjMxNTI0ODBiNGFlNTkxOTJkYTIxNzgwMDE4YjA3ZDVmMWI2ODA3ZGJlMGNiMjBiMjI3MDdmYjYxMiZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.uyXLvZD0vmSPoKKnTBG4Mm4iriMYIQLqO26U43caXkg" alt="Wireless Security Analyzer screenshot">
+                </div>
+                <div class="project-details">
+                    <h3>NeoBMO</h3>
+                    <p>NeoBMO is a dual-mode graphical interface designed for Raspberry Pi (and similar single-board computers). It offers two modes:
+
+Game Mode — Launch and play simple, desktop-friendly games (e.g., Flappy Huseyin, Dino, Snake, Tetris, 2048, Space Warriors, Mushroom).
+Evil Mode — Display educational, permissioned security tooling demonstrations (e.g., Wi‑Fi tests, BLE test utilities, VPN checks, MAC changer). These features are meant strictly for learning and authorized testing.</p>
+                    <div class="tech-tags">
+                        <span>Raspberry Pi</span><span>Python</span><span>Cybersecurity</span><span>Circuit</span>
+                    </div>
+                    <div class="stats">2024 · Personal project</div>
+                </div>
+            </article>
+
+            <article class="project-card" tabindex="0" role="article" aria-label="Retro Console PCB Restoration">
+                <div class="project-image">
+                    <img src="https://private-user-images.githubusercontent.com/175241145/501187407-6774c4db-daeb-4072-95db-9fab13d5968e.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjExNTc3NjgsIm5iZiI6MTc2MTE1NzQ2OCwicGF0aCI6Ii8xNzUyNDExNDUvNTAxMTg3NDA3LTY3NzRjNGRiLWRhZWItNDA3Mi05NWRiLTlmYWIxM2Q1OTY4ZS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUxMDIyJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MTAyMlQxODI0MjhaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT02OWI5MmFhNjlhZTI1YjA4NWIxZDhhNGQyN2VhZmM5NGNlMjM5NWFkZDVlYmE2MGU2N2JiNjQyNTg1M2QyZTNjJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.UpJOUuOYHuOtjWlv-WEveTFtC6U3UozYhpED3qaZVZk" alt="Retro Console PCB Restoration screenshot">
+                </div>
+                <div class="project-details">
+                    <h3>CodeFlux AI</h3>
+                    <p>CodeFlux AI is a next-generation React-based coding assistant built for developers who want speed, precision, and intelligence in one place.
+
+It reads your code, understands your intent, and instantly provides solutions, fixes, and clear explanations.
+Unlike ordinary assistants, CodeFlux AI can process and keep context across multiple files simultaneously, allowing you to work seamlessly on full projects without losing focus.</p>
+                    <div class="tech-tags">
+                        <span>Ai integration</span><span>JavaScript</span><span>React</span><span>Website</span>
+                    </div>
+                    <div class="stats">2025 · Personal Project</div>
+                </div>
+            </article>
+
+
+            <article class="project-card" tabindex="0" role="article" aria-label="AI-Powered Task Manager">
+                <div class="project-image">
+                    <img src="https://private-user-images.githubusercontent.com/175241145/504351747-8ff4ddb4-8716-44cd-9f67-151c3b044fac.jpeg?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjExNTg0NjAsIm5iZiI6MTc2MTE1ODE2MCwicGF0aCI6Ii8xNzUyNDExNDUvNTA0MzUxNzQ3LThmZjRkZGI0LTg3MTYtNDRjZC05ZjY3LTE1MWMzYjA0NGZhYy5qcGVnP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI1MTAyMiUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNTEwMjJUMTgzNjAwWiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9YWZmNWUyMmNjNDJkNzMxNDA0N2E3MDk2MmY5OWYxMzQyNzI1Y2U5MmZlZGUwY2YxNDkxMGRjYzI4MDU1YjIyMiZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.ydyhAzPGD9tARRwcVrhPMTpjhKxIZM4cHTTUCSWF2us" alt="AI Task Manager screenshot">
+                </div>
+                <div class="project-details">
+                    <h3>AirMouse</h3>
+                    <p>AirMouse turns an ESP32 + MPU6050 into a motion-controlled mouse. It reads gyroscope data on the ESP32, streams simple MOVE x y messages over serial, and a Python client reads those messages to move the system cursor in real time.
+
+Quick pitch: move the ESP32 in your hand and the pointer follows. Clean, low-latency, and hackable.
+
+</p>
+                    <div class="tech-tags">
+                        <span>C++</span><span>Python</span><span>Esp32</span><span>Soldering</span>
+                    </div>
+                    <div class="stats">2025 · Hobby Project</div>
+                </div>
+            </article>
+             <article class="project-card" tabindex="0" role="article" aria-label="Wireless Security Analyzer">
+                <div class="project-image">
+                    <img src="https://cdn.pixabay.com/photo/2021/12/27/10/50/telegram-6896827_1280.png">
+                </div>
+                <div class="project-details">
+                    <h3>WatchGuard</h3>
+                    <p>WatchGuard is an intelligent Python bot that monitors, logs, and remotely manages your system via Telegram.
+It tracks network connectivity, system performance, and temperature, performs scheduled log rotation, and can reboot the device when needed — all through Telegram commands.</p>
+                    <div class="tech-tags">
+                        <span>Telegram Bot</span><span>Python</span><span>Cybersecurity</span><span>Spy</span>
+                    </div>
+                    <div class="stats">2024 · Personal project</div>
+                </div>
+            </article>
+        </section>
+        
+        <section id="contact" class="section-block" aria-labelledby="contact-title">
+            <h2 id="contact-title">LET'S CONNECT</h2>
+            
+            <div class="contact-content">
+                <h3>Need a Developer or Collaborator?</h3>
+                <p>I’m currently exploring new opportunities and interesting projects. Feel free to connect with me on professional platforms or check out my work on GitHub!</p>
+                <div class="contact-buttons">
+                    <a href="https://www.linkedin.com/in/efe-tumbek-254b25362/" target="_blank" rel="noopener noreferrer" class="contact-button" aria-label="LinkedIn profiline git">
+    <i class="fab fa-linkedin-in"></i> LinkedIn
+</a>
+                    <a href="https://github.com/uCanCallSpitfire" target="_blank" rel="noopener noreferrer" class="contact-button" aria-label="GitHub profiline git">
+    <i class="fab fa-github"></i> GitHub
+    
+</a>  <a href="mailto:efe20171999@gmail.com" class="contact-button" aria-label="E-posta gönder">
+        <i class="fas fa-envelope"></i> Mail
+    </a>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Nav link listesi
+    const navLinks = document.querySelectorAll('.nav-list a');
+
+    // Scrollspy: IntersectionObserver
+    const sections = document.querySelectorAll('.section-block');
+    const options = {
+        root: null,
+        // Düzgün çalışması için alt margin'i daha güvenli bir değere ayarladık
+        rootMargin: '0px 0px -40% 0px', 
+        threshold: 0
+    };                          
+
+    const observer = new IntersectionObserver((entries) => {
+        let activeSectionId = null;
+        
+        // Tüm linklerin 'active' sınıfını kaldır
+        navLinks.forEach(l => l.classList.remove('active'));
+
+        // Görünen tüm bölümleri döngüye al
+        entries.forEach(entry => {
+            // Eğer bölüm kesişiyorsa (görünüyorsa)
+            if (entry.isIntersecting) {
+                // Sadece görünürlüğün %40'ından daha az kaymış olanları değil, 
+                // ekrana girenleri bul
+                activeSectionId = entry.target.getAttribute('id');
+                
+                // Active link'i bul ve 'active' sınıfını ekle
+                const navLink = document.querySelector(`.nav-list a[href="#${activeSectionId}"]`);
+                if (navLink) {
+                    navLink.classList.add('active');
+                }
+            }
+        });
+
+        // NOT: Buradaki mantık, aynı anda birden fazla bölüm göründüğünde
+        // en sonkini (en üstteki) aktif yapar. Bunu garanti altına almak için
+        // entries dizisini tersine çevirip ilk isIntersecting olanı almak daha güvenlidir.
+        // Ancak IntersectionObserver genellikle en yüksek kesişme oranına sahip olana 
+        // odaklandığı için bu ayar (rootMargin ile) işe yaramalıdır.
+
+        // Daha güvenli bir "en son/üstteki görünen" öğeyi bulma mantığı (tersten gitme)
+        for (let i = entries.length - 1; i >= 0; i--) {
+            const entry = entries[i];
+            if (entry.isIntersecting) {
+                // Eğer bu bölüm görünüyorsa, önceki aktifliği kaldırıp bunu ekle
+                navLinks.forEach(l => l.classList.remove('active'));
+                const id = entry.target.getAttribute('id');
+                const navLink = document.querySelector(`.nav-list a[href="#${id}"]`);
+                if (navLink) {
+                    navLink.classList.add('active');
+                    break; // Sadece bir tane aktif link olmalı, bu yüzden döngüyü kır
+                }
+            }
+        }
+    }, options);
+
+    sections.forEach(section => observer.observe(section));
+
+    // Mouse glow hareketi
+    const cursor = document.querySelector('.custom-cursor');
+
+    document.addEventListener('mousemove', e => {
+        // İmlecin ortalanması için offset hesaplaması
+        const offset = cursor.offsetWidth / 2;
+        cursor.style.top = e.clientY - offset + 'px';
+        cursor.style.left = e.clientX - offset + 'px';
+    });
+
+    // Hover efekti linklerde, project-card’da VE contact-button’da
+    // Seçiciyi genişlettik
+    document.querySelectorAll('a, .project-card, .contact-button, .social-links a').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+});
+</script>
+
+</body>
+</html>
